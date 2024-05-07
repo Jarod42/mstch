@@ -1,13 +1,19 @@
 #pragma once
 
+#if !__has_include(<variant>)
 #include <boost/variant/static_visitor.hpp>
+#endif
 
 #include "mstch/mstch.hpp"
 #include "has_token.hpp"
 
 namespace mstch {
 
-class get_token: public boost::static_visitor<const mstch::node&> {
+class get_token
+#if !__has_include(<variant>)
+    : public boost::static_visitor<const mstch::node&>
+#endif
+{
  public:
   get_token(const std::string& token, const mstch::node& node):
       m_token(token), m_node(node)

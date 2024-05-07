@@ -6,7 +6,11 @@
 #include <memory>
 #include <functional>
 
+#if __has_include(<variant>)
+#include <variant>
+#else
 #include <boost/variant.hpp>
+#endif
 
 namespace mstch {
 
@@ -93,6 +97,38 @@ class lambda_t {
 
 }
 
+#if __has_include(<variant>)
+
+struct node;
+
+struct node : std::variant<std::nullptr_t,
+                           std::string,
+                           int,
+                           double,
+                           bool,
+                           internal::lambda_t<node>,
+                           std::shared_ptr<internal::object_t<node>>,
+                           std::map<const std::string, node>,
+                           std::vector<node>>
+{
+    using std::variant<std::nullptr_t,
+                       std::string,
+                       int,
+                       double,
+                       bool,
+                       internal::lambda_t<node>,
+                       std::shared_ptr<internal::object_t<node>>,
+                       std::map<const std::string, node>,
+                       std::vector<node>>::variant;
+};
+
+using object = internal::object_t<node>;
+using lambda = internal::lambda_t<node>;
+using map = std::map<const std::string, node>;
+using array = std::vector<node>;
+
+#else
+
 using node = boost::make_recursive_variant<
     std::nullptr_t, std::string, int, double, bool,
     internal::lambda_t<boost::recursive_variant_>,
@@ -103,6 +139,8 @@ using object = internal::object_t<node>;
 using lambda = internal::lambda_t<node>;
 using map = std::map<const std::string, node>;
 using array = std::vector<node>;
+
+#endif
 
 std::string render(
     const std::string& tmplt,

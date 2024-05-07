@@ -1,12 +1,18 @@
 #pragma once
 
+#if !__has_include(<variant>)
 #include <boost/variant/static_visitor.hpp>
+#endif
 
 #include "mstch/mstch.hpp"
 
 namespace mstch {
 
-class is_node_empty: public boost::static_visitor<bool> {
+class is_node_empty
+#if !__has_include(<variant>)
+    : public boost::static_visitor<bool>
+#endif
+{
  public:
   template<class T>
   bool operator()(const T&) const {

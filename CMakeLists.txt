@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.5)
 project(mstch)
 
 option(WITH_UNIT_TESTS "enable building unit test executable" OFF)
@@ -10,8 +10,11 @@ set(CMAKE_BUILD_TYPE Release)
 
 set(mstch_VERSION 1.0.1)
 
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -O3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3")
 endif()
 
 add_subdirectory(src)
